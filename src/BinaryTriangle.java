@@ -40,51 +40,47 @@ public class BinaryTriangle {
 
     //Main method which recursively calculates all possible paths and their sums
     private static void computePathSum(int[][] triangle, int x, int y, int sum, String path) {
-        int parentNodeValue = triangle[x][y];                       //takes current parent node's value
+        int parentNodeValue = triangle.length > 0 ? triangle[x][y] : 0;     //takes current parent node's value or zero if  2d array is empty
 
-        sum += parentNodeValue;                                     //adds current parent node's value  to total sum
+        sum += parentNodeValue;                                     //adds current parent node's value to total sum
         path += parentNodeValue;                                    //adds number to path
 
-        if (x + 1 < triangle.length) {                              //checks whether there are values on next level
+        if (x + 1 < triangle.length) {                              //checks whether there are values on next row of numbers
             path += ARROW_SEPARATOR;                                //add separator if x coordinate did not reach bottom
 
             int leftChildNodeValue = triangle[x + 1][y];            //takes left child node's value which is in the downward
             int rightChildNodeValue = triangle[x + 1][y + 1];       //takes right child node's value which is in the diagonal
 
-            boolean isEvenParentNode = isNumberEven(parentNodeValue);
-            boolean isEvenLeftChild = isNumberEven(leftChildNodeValue);
-            boolean isEvenRightChild = isNumberEven(rightChildNodeValue);
+            boolean isEvenParentNode = isNumberEven(parentNodeValue);               //find if parent node's value is even number or no
+            boolean isEvenLeftChildNode = isNumberEven(leftChildNodeValue);         //find if left child node's value is even number or no
+            boolean isEvenRightChildNode = isNumberEven(rightChildNodeValue);       //find if right child node's value is even number or no
 
-            //parent node is even, left child is not even and right child is not even, then go downwards and diagonally
-            if (isEvenParentNode && !isEvenLeftChild && !isEvenRightChild) {
+            //parent node is even, left child is not even and right child is not even
+            //or parent node is not even, left child is even and right child is even
+            // then go downwards and diagonally
+            if ((isEvenParentNode && !isEvenLeftChildNode && !isEvenRightChildNode) ||
+                    (!isEvenParentNode && isEvenLeftChildNode && isEvenRightChildNode)) {
                 ++x;                         //x value has to be incremented before, because recursion goes downwards and diagonally
                 computePathSum(triangle, x, y, sum, path);
                 computePathSum(triangle, x, ++y, sum, path);
             }
-            //parent node is not even, left child is even and right child is even, then go downwards and diagonally
-            else if (!isEvenParentNode && isEvenLeftChild && isEvenRightChild) {
-                ++x;
-                computePathSum(triangle, x, y, sum, path);
-                computePathSum(triangle, x, ++y, sum, path);
-            }
-            //parent node is even, left child is not even and right child is even, then go downwards
-            else if (isEvenParentNode && !isEvenLeftChild) {
+            //parent node is even, left child is not even and right child is even,
+            //or parent node is not even, left child is even and right child is not even
+            // then go downwards
+            else if ((isEvenParentNode && !isEvenLeftChildNode) ||
+                    (!isEvenParentNode && isEvenLeftChildNode)) {
                 computePathSum(triangle, ++x, y, sum, path);
             }
-            //parent node is even, left child is even and right child is not even, then go diagonally
-            else if (isEvenParentNode && !isEvenRightChild) {
+            //parent node is even, left child is even and right child is not even
+            //or parent node is not even, left child is not even and right child is even
+            //then go diagonally
+            else if ((isEvenParentNode && !isEvenRightChildNode) ||
+                    (!isEvenParentNode && isEvenRightChildNode)) {
                 computePathSum(triangle, ++x, ++y, sum, path);
             }
-            //parent node is not even, left child is even and right child is not even, then go downwards
-            else if (!isEvenParentNode && isEvenLeftChild) {
-                computePathSum(triangle, ++x, y, sum, path);
-            }
-            //parent node is not even, left child is not even and right child is even, then go diagonally
-            else if (!isEvenParentNode && isEvenRightChild) {
-                computePathSum(triangle, ++x, ++y, sum, path);
-            }
+
         } else {
-            paths.put(path, sum);
+            paths.put(path, sum);           //put final sum and answer to map
         }
     }
 
@@ -101,6 +97,7 @@ public class BinaryTriangle {
             }
         } catch (IOException e) {
             System.out.println(FAILURE_MESSAGE);
+            System.out.println(e.getMessage());
         }
 
         return parseArray(triangleNumbersRows);
