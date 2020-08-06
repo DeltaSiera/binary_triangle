@@ -40,16 +40,16 @@ public class BinaryTriangle {
 
     //Main method which recursively calculates all possible paths and their sums
     private static void computePathSum(int[][] triangle, int x, int y, int sum, String path) {
-        int parentNodeValue = triangle.length > 0 ? triangle[x][y] : 0;     //takes current parent node's value or zero if  2d array is empty
+        int parentNodeValue = triangle.length > 0 ? triangle[x][y] : 0;             //takes current parent node's value or zero if  2d array is empty
 
-        sum += parentNodeValue;                                     //adds current parent node's value to total sum
-        path += parentNodeValue;                                    //adds number to path
+        sum += parentNodeValue;                                                     //adds current parent node's value to total sum
+        path += parentNodeValue;                                                    //adds number to path
 
-        if (x + 1 < triangle.length) {                              //checks whether there are values on next row of numbers
-            path += ARROW_SEPARATOR;                                //add separator if x coordinate did not reach bottom
+        if (x + 1 < triangle.length) {                                              //checks whether there are values on next row of numbers
+            path += ARROW_SEPARATOR;                                                //add separator if x coordinate did not reach bottom
 
-            int leftChildNodeValue = triangle[x + 1][y];            //takes left child node's value which is in the downward
-            int rightChildNodeValue = triangle[x + 1][y + 1];       //takes right child node's value which is in the diagonal
+            int leftChildNodeValue = triangle[x + 1][y];                            //takes left child node's value which is in the downward
+            int rightChildNodeValue = triangle[x + 1][y + 1];                       //takes right child node's value which is in the diagonal
 
             boolean isEvenParentNode = isNumberEven(parentNodeValue);               //find if parent node's value is even number or no
             boolean isEvenLeftChildNode = isNumberEven(leftChildNodeValue);         //find if left child node's value is even number or no
@@ -60,7 +60,7 @@ public class BinaryTriangle {
             // then go downwards and diagonally
             if ((isEvenParentNode && !isEvenLeftChildNode && !isEvenRightChildNode) ||
                     (!isEvenParentNode && isEvenLeftChildNode && isEvenRightChildNode)) {
-                ++x;                         //x value has to be incremented before, because recursion goes downwards and diagonally
+                ++x;                                                                //x value has to be incremented before, because recursion goes downwards and diagonally
                 computePathSum(triangle, x, y, sum, path);
                 computePathSum(triangle, x, ++y, sum, path);
             }
@@ -80,7 +80,7 @@ public class BinaryTriangle {
             }
 
         } else {
-            paths.put(path, sum);           //put final sum and answer to map
+            paths.put(path, sum);                                                   //put final sum and answer to map
         }
     }
 
