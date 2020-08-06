@@ -14,23 +14,23 @@ import java.util.*;
  * Right child node's coordinate is (x+1; y+1);
  */
 public class BinaryTriangle {
-    private static final HashMap<String, Integer> paths = new HashMap<>();                  //keeps all path and their sums
-    public static final String INPUT_FILE_NAME = "triangle.txt";                            //txt file where information about triangle is stored
+    private static final HashMap<String, Integer> paths = new HashMap<>();                  // keeps all path and their sums
+    public static final String INPUT_FILE_NAME = "triangle.txt";                            // txt file where information about triangle is stored
     public static final int INITIAL_SUM = 0;
     public static final String PATH = "";
     public static final String ARROW_SEPARATOR = " -> ";
     public static final String FAILURE_MESSAGE = "Problems with an input file. Please, make sure that input file is created.";
 
     public static void main(String[] args) {
-        int[][] triangle = readTriangleDataFromFile();                                      //2d triangle array of numbers rows
+        final int[][] triangle = readTriangleDataFromFile();                                // 2d triangle array of numbers rows
         int startPosX = 0;
-        int startPosY = 0;                                                                  //starting positions
+        int startPosY = 0;                                                                  // starting positions
 
         computePathSum(triangle, startPosX, startPosY, INITIAL_SUM, PATH);
         printPathAndValue();
     }
 
-    //Prints path and its maximum value
+    // Prints path and its maximum value
     private static void printPathAndValue() {
         paths.entrySet()
                 .stream()
@@ -38,61 +38,61 @@ public class BinaryTriangle {
                 .ifPresent(path -> System.out.printf("Max sum: %d\nPath: %s\n", path.getValue(), path.getKey()));
     }
 
-    //Main method which recursively calculates all possible paths and their sums
-    private static void computePathSum(int[][] triangle, int x, int y, int sum, String path) {
-        int parentNodeValue = triangle.length > 0 ? triangle[x][y] : 0;             //takes current parent node's value or zero if  2d array is empty
+    // Main method which recursively calculates all possible paths and their sums
+    private static void computePathSum(final int[][] triangle, int x, int y, int sum, String path) {
+        int parentNodeValue = triangle.length > 0 ? triangle[x][y] : 0;             // takes current parent node's value or zero if  2d array is empty
 
-        sum += parentNodeValue;                                                     //adds current parent node's value to total sum
-        path += parentNodeValue;                                                    //adds number to path
+        sum += parentNodeValue;                                                     // adds current parent node's value to total sum
+        path += parentNodeValue;                                                    // adds number to path
 
-        if (x + 1 < triangle.length) {                                              //checks whether there are values on next row of numbers
-            path += ARROW_SEPARATOR;                                                //add separator if x coordinate did not reach bottom
+        if (x + 1 < triangle.length) {                                              // checks whether there are values on next row of numbers
+            path += ARROW_SEPARATOR;                                                // add separator if x coordinate did not reach bottom
 
-            int leftChildNodeValue = triangle[x + 1][y];                            //takes left child node's value which is in the downward
-            int rightChildNodeValue = triangle[x + 1][y + 1];                       //takes right child node's value which is in the diagonal
+            int leftChildNodeValue = triangle[x + 1][y];                            // takes left child node's value which is in the downward
+            int rightChildNodeValue = triangle[x + 1][y + 1];                       // takes right child node's value which is in the diagonal
 
-            boolean isEvenParentNode = isNumberEven(parentNodeValue);               //find if parent node's value is even number or no
-            boolean isEvenLeftChildNode = isNumberEven(leftChildNodeValue);         //find if left child node's value is even number or no
-            boolean isEvenRightChildNode = isNumberEven(rightChildNodeValue);       //find if right child node's value is even number or no
+            boolean isEvenParentNode = isNumberEven(parentNodeValue);               // find if parent node's value is even number or no
+            boolean isEvenLeftChildNode = isNumberEven(leftChildNodeValue);         // find if left child node's value is even number or no
+            boolean isEvenRightChildNode = isNumberEven(rightChildNodeValue);       // find if right child node's value is even number or no
 
-            //parent node is even, left child is not even and right child is not even
-            //or parent node is not even, left child is even and right child is even
+            // parent node is even, left child is not even and right child is not even
+            // or parent node is not even, left child is even and right child is even
             // then go downwards and diagonally
             if ((isEvenParentNode && !isEvenLeftChildNode && !isEvenRightChildNode) ||
                     (!isEvenParentNode && isEvenLeftChildNode && isEvenRightChildNode)) {
-                ++x;                            //x value has to be incremented before, because recursion goes downwards and diagonally
+                ++x;                            // x value has to be incremented before, because recursion goes downwards and diagonally
                 computePathSum(triangle, x, y, sum, path);
                 computePathSum(triangle, x, ++y, sum, path);
             }
-            //parent node is even, left child is not even and right child is even,
-            //or parent node is not even, left child is even and right child is not even
+            // parent node is even, left child is not even and right child is even,
+            // or parent node is not even, left child is even and right child is not even
             // then go downwards
             else if ((isEvenParentNode && !isEvenLeftChildNode) ||
                     (!isEvenParentNode && isEvenLeftChildNode)) {
                 computePathSum(triangle, ++x, y, sum, path);
             }
-            //parent node is even, left child is even and right child is not even
-            //or parent node is not even, left child is not even and right child is even
-            //then go diagonally
+            // parent node is even, left child is even and right child is not even
+            // or parent node is not even, left child is not even and right child is even
+            // then go diagonally
             else if ((isEvenParentNode && !isEvenRightChildNode) ||
                     (!isEvenParentNode && isEvenRightChildNode)) {
                 computePathSum(triangle, ++x, ++y, sum, path);
             }
 
         } else {
-            paths.put(path, sum);            //put final sum and answer to map
+            paths.put(path, sum);            // put final sum and answer to map
         }
     }
 
     // This  method reads triangle numbers rows from txt file triangle.txt and returns 2d array of int elements
     private static int[][] readTriangleDataFromFile() {
-        ArrayList<List<String>> triangleNumbersRows = new ArrayList<>();              //keeps triangle grid of numbers
-        List<String> numbersRow;                                                      //keeps one line of triangle numbers row
+        ArrayList<List<String>> triangleNumbersRows = new ArrayList<>();              // keeps triangle grid of numbers
+        List<String> numbersRow;                                                      // keeps one line of triangle numbers row
 
         try (BufferedReader br = new BufferedReader(new FileReader(INPUT_FILE_NAME))) {
-            String line;                                                              //temporary line to read line of numbers
+            String line;                                                              // temporary line to read line of numbers
             while ((line = br.readLine()) != null) {
-                numbersRow = Arrays.asList(line.split(" "));                    //gets list of numbers after splitting string line of numbers
+                numbersRow = Arrays.asList(line.split(" "));                    // gets list of numbers after splitting string line of numbers
                 triangleNumbersRows.add(numbersRow);
             }
         } catch (IOException e) {
@@ -104,16 +104,16 @@ public class BinaryTriangle {
     }
 
     // Method converts List of Lists to 2d array of int primitives
-    private static int[][] parseArray(ArrayList<List<String>> triangleNumbersRows) {
+    private static int[][] parseArray(final ArrayList<List<String>> triangleNumbersRows) {
         return triangleNumbersRows.stream()
                 .map(numbersRow -> numbersRow.stream()
-                        .mapToInt(Integer::parseInt)                //maps string number to int number
+                        .mapToInt(Integer::parseInt)                // maps string number to int number
                         .toArray())
                 .toArray(int[][]::new);
     }
 
-    //Checks whether numbers is seven or not
-    private static boolean isNumberEven(int number) {
+    // Checks whether numbers is seven or not
+    private static boolean isNumberEven(final int number) {
         return number % 2 == 0;
     }
 }
