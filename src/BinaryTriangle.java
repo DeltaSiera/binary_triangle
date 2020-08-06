@@ -25,6 +25,7 @@ public class BinaryTriangle {
         int[][] triangle = readTriangleDataFromFile();                                      //2d triangle array of numbers rows
         int startPosX = 0;
         int startPosY = 0;                                                                  //starting positions
+
         computePathSum(triangle, startPosX, startPosY, INITIAL_SUM, PATH);
         printPathAndValue();
     }
@@ -54,25 +55,9 @@ public class BinaryTriangle {
             boolean isEvenLeftChild = isNumberEven(leftChildNodeValue);
             boolean isEvenRightChild = isNumberEven(rightChildNodeValue);
 
-            //parent node is not even, left child is even and right child is not even, then go downwards
-            if (!isEvenParentNode && isEvenLeftChild && !isEvenRightChild) {
-                computePathSum(triangle, ++x, y, sum, path);
-            }
-            //parent node is even, left child is not even and right child is even, then go downwards
-            else if (isEvenParentNode && !isEvenLeftChild && isEvenRightChild) {
-                computePathSum(triangle, ++x, y, sum, path);
-            }
-            //parent node is not even, left child is not even and right child is even, then go diagonally
-            else if (!isEvenParentNode && !isEvenLeftChild && isEvenRightChild) {
-                computePathSum(triangle, ++x, ++y, sum, path);
-            }
-            //parent node is even, left child is even and right child is not even, then go diagonally
-            else if (isEvenParentNode && isEvenLeftChild && !isEvenRightChild) {
-                computePathSum(triangle, ++x, ++y, sum, path);
-            }
             //parent node is even, left child is not even and right child is not even, then go downwards and diagonally
-            else if (isEvenParentNode && !isEvenLeftChild && !isEvenRightChild) {
-                ++x;                                                                        //x value has to be incremented before, because recursion goes downwards and diagonally
+            if (isEvenParentNode && !isEvenLeftChild && !isEvenRightChild) {
+                ++x;                         //x value has to be incremented before, because recursion goes downwards and diagonally
                 computePathSum(triangle, x, y, sum, path);
                 computePathSum(triangle, x, ++y, sum, path);
             }
@@ -82,6 +67,22 @@ public class BinaryTriangle {
                 computePathSum(triangle, x, y, sum, path);
                 computePathSum(triangle, x, ++y, sum, path);
             }
+            //parent node is even, left child is not even and right child is even, then go downwards
+            else if (isEvenParentNode && !isEvenLeftChild) {
+                computePathSum(triangle, ++x, y, sum, path);
+            }
+            //parent node is even, left child is even and right child is not even, then go diagonally
+            else if (isEvenParentNode && !isEvenRightChild) {
+                computePathSum(triangle, ++x, ++y, sum, path);
+            }
+            //parent node is not even, left child is even and right child is not even, then go downwards
+            else if (!isEvenParentNode && isEvenLeftChild) {
+                computePathSum(triangle, ++x, y, sum, path);
+            }
+            //parent node is not even, left child is not even and right child is even, then go diagonally
+            else if (!isEvenParentNode && isEvenRightChild) {
+                computePathSum(triangle, ++x, ++y, sum, path);
+            }
         } else {
             paths.put(path, sum);
         }
@@ -89,13 +90,13 @@ public class BinaryTriangle {
 
     // This  method reads triangle numbers rows from txt file triangle.txt and returns 2d array of int elements
     private static int[][] readTriangleDataFromFile() {
-        ArrayList<ArrayList<String>> triangleNumbersRows = new ArrayList<>();           //keeps triangle grid of numbers
-        ArrayList<String> numbersRow;                                                   //keeps one line of triangle numbers row
+        ArrayList<List<String>> triangleNumbersRows = new ArrayList<>();              //keeps triangle grid of numbers
+        List<String> numbersRow;                                                      //keeps one line of triangle numbers row
 
         try (BufferedReader br = new BufferedReader(new FileReader(INPUT_FILE_NAME))) {
-            String line;                                                                //temporary line to read line of numbers
+            String line;                                                              //temporary line to read line of numbers
             while ((line = br.readLine()) != null) {
-                numbersRow = new ArrayList<>(Arrays.asList(line.split(" ")));
+                numbersRow = Arrays.asList(line.split(" "));                    //gets list of numbers after splitting string line of numbers
                 triangleNumbersRows.add(numbersRow);
             }
         } catch (IOException e) {
@@ -106,7 +107,7 @@ public class BinaryTriangle {
     }
 
     // Method converts List of Lists to 2d array of int primitives
-    private static int[][] parseArray(ArrayList<ArrayList<String>> triangleNumbersRows) {
+    private static int[][] parseArray(ArrayList<List<String>> triangleNumbersRows) {
         return triangleNumbersRows.stream()
                 .map(numbersRow -> numbersRow.stream()
                         .mapToInt(Integer::parseInt)                //maps string number to int number
