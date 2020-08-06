@@ -87,7 +87,7 @@ public class BinaryTriangle {
         }
     }
 
-    // This  method reads triangle numbers rows from txt file triangle.txt and returns 2d array of tits elements
+    // This  method reads triangle numbers rows from txt file triangle.txt and returns 2d array of int elements
     private static int[][] readTriangleDataFromFile() {
         ArrayList<ArrayList<String>> triangleNumbersRows = new ArrayList<>();           //keeps triangle grid of numbers
         ArrayList<String> numbersRow;                                                   //keeps one line of triangle numbers row
@@ -105,7 +105,7 @@ public class BinaryTriangle {
         return parseArray(triangleNumbersRows);
     }
 
-    // Method converts List of Lists to atomic 2d array of int primitives
+    // Method converts List of Lists to 2d array of int primitives
     private static int[][] parseArray(ArrayList<ArrayList<String>> triangleNumbersRows) {
         return triangleNumbersRows.stream()
                 .map(numbersRow -> numbersRow.stream()
