@@ -60,7 +60,7 @@ public class BinaryTriangle {
             // then go downwards and diagonally
             if ((isEvenParentNode && !isEvenLeftChildNode && !isEvenRightChildNode) ||
                     (!isEvenParentNode && isEvenLeftChildNode && isEvenRightChildNode)) {
-                ++x;                                                                //x value has to be incremented before, because recursion goes downwards and diagonally
+                ++x;                            //x value has to be incremented before, because recursion goes downwards and diagonally
                 computePathSum(triangle, x, y, sum, path);
                 computePathSum(triangle, x, ++y, sum, path);
             }
@@ -80,7 +80,7 @@ public class BinaryTriangle {
             }
 
         } else {
-            paths.put(path, sum);                                                   //put final sum and answer to map
+            paths.put(path, sum);            //put final sum and answer to map
         }
     }
 
