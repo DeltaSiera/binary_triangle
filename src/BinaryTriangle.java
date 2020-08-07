@@ -1,3 +1,6 @@
+import exception.InputDataException;
+import exception.PositiveNumberException;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,11 +23,14 @@ public class BinaryTriangle {
     public static final String PATH = "";
     public static final String ARROW_SEPARATOR = " -> ";
     public static final String FAILURE_MESSAGE = "Problems with an input file. Please, make sure that input file is created.";
+    public static final String WRONG_INPUT_DATA_MESSAGE = "Wrong input data, check it again.";
+    public static final String POSITIVE_NUMBERS_ARE_ALLOWED_MESSAGE = "Only positive numbers are allowed.";
+    public static final String NUMERIC_SYMBOLS_ARE_ALLOWED_MESSAGE = "Only numeric symbols are allowed.";
 
     public static void main(String[] args) {
-        final int[][] triangle = readTriangleDataFromFile();                                // 2d triangle array of numbers rows
-        int startPosX = 0;
-        int startPosY = 0;                                                                  // starting positions
+        final ArrayList<List<Integer>> triangle = readTriangleDataFromFile(INPUT_FILE_NAME);                                // 2d triangle array of numbers rows
+        int startPosX = 0;                                                                                                  // starting positions
+        int startPosY = 0;
 
         computePathSum(triangle, startPosX, startPosY, INITIAL_SUM, PATH);
         printPathAndValue();
@@ -39,17 +45,17 @@ public class BinaryTriangle {
     }
 
     // Main method which recursively calculates all possible paths and their sums
-    private static void computePathSum(final int[][] triangle, int x, int y, int sum, String path) {
-        int parentNodeValue = triangle.length > 0 ? triangle[x][y] : 0;             // takes current parent node's value or zero if  2d array is empty
+    public static void computePathSum(final ArrayList<List<Integer>> triangle, int x, int y, int sum, String path) {
+        int parentNodeValue = triangle.size() > 0 ? triangle.get(x).get(y) : 0;     // takes current parent node's value or zero if  2d array is empty
 
         sum += parentNodeValue;                                                     // adds current parent node's value to total sum
         path += parentNodeValue;                                                    // adds number to path
 
-        if (x + 1 < triangle.length) {                                              // checks whether there are values on next row of numbers
+        if (x + 1 < triangle.size()) {                                              // checks whether there are values on next row of numbers
             path += ARROW_SEPARATOR;                                                // add separator if x coordinate did not reach bottom
 
-            int leftChildNodeValue = triangle[x + 1][y];                            // takes left child node's value which is in the downward
-            int rightChildNodeValue = triangle[x + 1][y + 1];                       // takes right child node's value which is in the diagonal
+            int leftChildNodeValue = triangle.get(x + 1).get(y);                    // takes left child node's value which is in the downward
+            int rightChildNodeValue = triangle.get(x + 1).get(y + 1);               // takes right child node's value which is in the diagonal
 
             boolean isEvenParentNode = isNumberEven(parentNodeValue);               // find if parent node's value is even number or no
             boolean isEvenLeftChildNode = isNumberEven(leftChildNodeValue);         // find if left child node's value is even number or no
@@ -83,36 +89,65 @@ public class BinaryTriangle {
         }
     }
 
-    // This  method reads triangle numbers rows from txt file triangle.txt and returns 2d array of int elements
-    private static int[][] readTriangleDataFromFile() {
-        ArrayList<List<String>> triangleNumbersRows = new ArrayList<>();              // keeps triangle grid of numbers
-        List<String> numbersRow;                                                      // keeps one line of triangle numbers row
+    public static ArrayList<List<Integer>> readTriangleDataFromFile(String fileName) {
+        ArrayList<List<Integer>> triangleNumbersRows = new ArrayList<>();                               // keeps triangle grid of numbers
+        List<Integer> numbersRow = new ArrayList<>();                                                   // keeps one line of triangle numbers row
 
-        try (BufferedReader br = new BufferedReader(new FileReader(INPUT_FILE_NAME))) {
-            String line;                                                              // temporary line to read line of numbers
-            while ((line = br.readLine()) != null) {
-                numbersRow = Arrays.asList(line.split(" "));                    // gets list of numbers after splitting string line of numbers
+        int numbersPerLineQuantity = 1;                                                                 //1-st line has one number, 2-nd - two ...
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String numbersLine;                                                                         // temporary line to read line of numbers
+            while ((numbersLine = br.readLine()) != null) {
+                String[] numbers = numbersLine.split(" ");
+                numbersRow = createNumbersRowList(numbersPerLineQuantity, numbers);
+                numbersPerLineQuantity++;
                 triangleNumbersRows.add(numbersRow);
             }
-        } catch (IOException e) {
+        } catch (IOException ioException) {
             System.out.println(FAILURE_MESSAGE);
-            System.out.println(e.getMessage());
+            System.out.println(ioException.getMessage());
+        } catch (InputDataException inputDataException) {
+            System.out.println(inputDataException.getMessage());
+            return new ArrayList<List<Integer>>();
         }
-
-        return parseArray(triangleNumbersRows);
+        return triangleNumbersRows;
     }
 
-    // Method converts List of Lists to 2d array of int primitives
-    private static int[][] parseArray(final ArrayList<List<String>> triangleNumbersRows) {
-        return triangleNumbersRows.stream()
-                .map(numbersRow -> numbersRow.stream()
-                        .mapToInt(Integer::parseInt)                // maps string number to int number
-                        .toArray())
-                .toArray(int[][]::new);
+    protected static List<Integer> createNumbersRowList(int numbersPerLineQuantity, String[] numbers) throws InputDataException {
+        List<Integer> numbersRow = new ArrayList<>();
+        for (String number : numbers) {
+            if (numbers.length > numbersPerLineQuantity ||
+                    numbers.length < numbersPerLineQuantity ||
+                    !isNumericAndPositive(number)) {
+                throw new InputDataException(WRONG_INPUT_DATA_MESSAGE);
+            } else {
+                numbersRow.add(Integer.parseInt(number));
+            }
+        }
+        return numbersRow;
+    }
+
+    // Check if given string number is numeric and positive
+    public static boolean isNumericAndPositive(final String stringNumber) {
+        if (stringNumber == null) {
+            return false;
+        }
+        try {
+            int parseNumber = Integer.parseInt(stringNumber);
+            if (parseNumber < 1) {
+                throw new PositiveNumberException(POSITIVE_NUMBERS_ARE_ALLOWED_MESSAGE);
+            }
+        } catch (NumberFormatException numberFormatException) {
+            System.out.println(NUMERIC_SYMBOLS_ARE_ALLOWED_MESSAGE);
+            return false;
+        } catch (PositiveNumberException positiveNumberException) {
+            System.out.println(positiveNumberException.getMessage());
+            return false;
+        }
+        return true;
     }
 
     // Checks whether numbers is seven or not
-    private static boolean isNumberEven(final int number) {
+    public static boolean isNumberEven(final int number) {
         return number % 2 == 0;
     }
 }
