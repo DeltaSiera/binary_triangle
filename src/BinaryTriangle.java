@@ -89,7 +89,7 @@ public class BinaryTriangle {
         }
     }
 
-    public static ArrayList<List<Integer>> readTriangleDataFromFile(String fileName) {
+    public static ArrayList<List<Integer>> readTriangleDataFromFile(final String fileName) {
         ArrayList<List<Integer>> triangleNumbersRows = new ArrayList<>();                               // keeps triangle grid of numbers
         List<Integer> numbersRow = new ArrayList<>();                                                   // keeps one line of triangle numbers row
 
