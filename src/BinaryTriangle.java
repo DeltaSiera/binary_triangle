@@ -93,7 +93,7 @@ public class BinaryTriangle {
         ArrayList<List<Integer>> triangleNumbersRows = new ArrayList<>();                               // keeps triangle grid of numbers
         List<Integer> numbersRow = new ArrayList<>();                                                   // keeps one line of triangle numbers row
 
-        int numbersPerLineQuantity = 1;                                                                 //1-st line has one number, 2-nd - two ...
+        int numbersPerLineQuantity = 1;                                                                 // 1-st line has one number, 2-nd - two ...
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String numbersLine;                                                                         // temporary line to read line of numbers
             while ((numbersLine = br.readLine()) != null) {
