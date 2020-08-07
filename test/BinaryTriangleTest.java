@@ -1,4 +1,5 @@
 import exception.InputDataException;
+import exception.PositiveNumberException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class BinaryTriangleTest {
     }
 
     @Test
-    public void shouldAssertTrue_whenListIsValid() throws InputDataException {
+    public void shouldAssertTrue_whenListIsValid() throws InputDataException, PositiveNumberException {
         String[] listToCheck = {"1", "2", "3"};
         List<Integer> expectedList = Arrays.asList(1, 2, 3);
         assertEquals(expectedList, BinaryTriangle.createNumbersRowList(expectedList.size(), listToCheck));

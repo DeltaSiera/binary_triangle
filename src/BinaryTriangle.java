@@ -105,20 +105,22 @@ public class BinaryTriangle {
         } catch (IOException ioException) {
             System.out.println(FAILURE_MESSAGE);
             System.out.println(ioException.getMessage());
-        } catch (InputDataException inputDataException) {
-            System.out.println(inputDataException.getMessage());
+        } catch (InputDataException | PositiveNumberException exception) {
+            System.out.println(exception.getMessage());
             return new ArrayList<List<Integer>>();
         }
+
         return triangleNumbersRows;
     }
 
-    protected static List<Integer> createNumbersRowList(int numbersPerLineQuantity, String[] numbers) throws InputDataException {
+    protected static List<Integer> createNumbersRowList(int numbersPerLineQuantity, String[] numbers) throws InputDataException, PositiveNumberException {
         List<Integer> numbersRow = new ArrayList<>();
         for (String number : numbers) {
             if (numbers.length > numbersPerLineQuantity ||
-                    numbers.length < numbersPerLineQuantity ||
-                    !isNumericAndPositive(number)) {
+                    numbers.length < numbersPerLineQuantity) {
                 throw new InputDataException(WRONG_INPUT_DATA_MESSAGE);
+            } else if (!isNumericAndPositive(number)) {
+                throw new PositiveNumberException(NUMERIC_SYMBOLS_ARE_ALLOWED_MESSAGE);
             } else {
                 numbersRow.add(Integer.parseInt(number));
             }
@@ -136,11 +138,7 @@ public class BinaryTriangle {
             if (parseNumber < 1) {
                 throw new PositiveNumberException(POSITIVE_NUMBERS_ARE_ALLOWED_MESSAGE);
             }
-        } catch (NumberFormatException numberFormatException) {
-            System.out.println(NUMERIC_SYMBOLS_ARE_ALLOWED_MESSAGE);
-            return false;
-        } catch (PositiveNumberException positiveNumberException) {
-            System.out.println(positiveNumberException.getMessage());
+        } catch (NumberFormatException | PositiveNumberException numberFormatException) {
             return false;
         }
         return true;
