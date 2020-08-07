@@ -78,7 +78,6 @@ public class BinaryTriangle {
                     (!isEvenParentNode && isEvenRightChildNode)) {
                 computePathSum(triangle, ++x, ++y, sum, path);
             }
-
         } else {
             paths.put(path, sum);            // put final sum and answer to map
         }
