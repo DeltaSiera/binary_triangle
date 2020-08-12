@@ -1,8 +1,19 @@
-import exception.InputDataException;
-import exception.PositiveNumberException;
-import org.junit.jupiter.api.Test;
+//import exception.InputDataException;
+//import exception.PositiveNumberException;
+//import org.junit.jupiter.api.Test;
+//
+//import java.io.IOException;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//
+//import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,67 +22,47 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BinaryTriangleTest {
 
     @Test
-    public void shouldAssertTrue_ifNumberIsEven() {
+    public void shouldAssertTrue_ifOneNumberIsEven() {
         int evenNumber = 22;
-        assertTrue(BinaryTriangle.isNumberEven(evenNumber));
+        int notEvenNumber = 21;
+        assertTrue(BinaryTriangle.areEvenOddBetweenSelf(evenNumber, notEvenNumber));
     }
 
     @Test
-    public void shouldAssertFalse_ifNumberIsNotEven() {
-        int evenNumber = 21;
-        assertFalse(BinaryTriangle.isNumberEven(evenNumber));
+    public void shouldAssertFalse_ifNumbersAreEven() {
+        int evenNumber = 22;
+        assertFalse(BinaryTriangle.areEvenOddBetweenSelf(evenNumber, evenNumber));
     }
 
     @Test
-    public void shouldAssertTrue_whenNumberIsNumericAndPositive() {
-        String numericPositiveNumber = "22";
-        assertTrue(BinaryTriangle.isNumericAndPositive(numericPositiveNumber));
+    public void test() {
+        List<String> testList = List.of("1", "2 3", "4 5 6");
+        int[][] expected = {{1}, {2, 3}, {4, 5, 6}};
+        int[][] actual = BinaryTriangle.mapListTo2DArray(testList);
+        assertTrue(Arrays.deepEquals(expected, actual));
     }
 
     @Test
-    public void shouldAssertFalse_whenNotNumberIsGiven() {
-        String numericPositiveNumber = "word";
-        assertFalse(BinaryTriangle.isNumericAndPositive(numericPositiveNumber));
+    public void readDataFromFile() throws IOException {
+        List<String> expected = List.of("1", "2 3", "4 5 6");
+        List<String> actual = BinaryTriangle.readDataFromFile("test\\triangle_test.txt");
+        assertEquals(actual, expected);
     }
 
     @Test
-    public void shouldAssertFalse_whenNumberIsNull() {
-        assertFalse(BinaryTriangle.isNumericAndPositive(null));
+    public void wrongData() {
+        List<String> wrongData = List.of("1", "a 2");
+        NumberFormatException exception = assertThrows(NumberFormatException.class,
+                () -> BinaryTriangle.mapListTo2DArray(wrongData),
+                "Check data.");
+        System.out.println(exception.getMessage()
+                                    .contains("For input string: "));
     }
-
-    @Test
-    public void shouldAssertFalse_whenNumberIsNumericAndNegative() {
-        assertFalse(BinaryTriangle.isNumericAndPositive("-1"));
-    }
-
-    @Test
-    public void shouldAssertTrue_whenListIsValid() throws InputDataException, PositiveNumberException {
-        String[] listToCheck = {"1", "2", "3"};
-        List<Integer> expectedList = Arrays.asList(1, 2, 3);
-        assertEquals(expectedList, BinaryTriangle.createNumbersRowList(expectedList.size(), listToCheck));
-    }
-
-    @Test
-    public void shouldAssertTrue_whenFileReadCorrectly() {
-        ArrayList<List<Integer>> expectedList = new ArrayList<>();
-        expectedList.add(Arrays.asList(1));
-        expectedList.add(Arrays.asList(1, 2));
-        expectedList.add(Arrays.asList(1, 2, 3));
-
-        ArrayList<List<Integer>> actualList = new ArrayList<>();
-        actualList = BinaryTriangle.readTriangleDataFromFile("triangle_test.txt");
-        assertEquals(expectedList, actualList);
-    }
-
-    @Test
-    public void shouldAssertEquals_whenStringOfInputIsGiven() {
-
-        String[] wrongNumberList = {"a"};
-        Exception exception = assertThrows(InputDataException.class, () -> BinaryTriangle.createNumbersRowList(wrongNumberList.length, wrongNumberList));
-
-        String expectedMessage = BinaryTriangle.WRONG_INPUT_DATA_MESSAGE;
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
-    }
+//
+//    @Test
+//    public void go() throws CloneNotSupportedException {
+//        int[][] triangle = {{1}, {2, 4}};
+//        BinaryTriangle.computePathSum(triangle, new Node());
+//        assertEquals(2, BinaryTriangle.NODES.size());
+//    }
 }

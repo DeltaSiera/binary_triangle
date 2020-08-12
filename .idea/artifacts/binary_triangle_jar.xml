@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="binary_triangle:jar">
-    <output-path>$PROJECT_DIR$</output-path>
-    <root id="archive" name="binary_triangle.jar">
-      <element id="module-output" name="binary_triangle" />
-    </root>
-  </artifact>
-</component>
