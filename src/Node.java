@@ -1,10 +1,27 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Node implements Cloneable {
-    private ArrayList<Integer> pathValues;
+    private List<Integer> pathValues;
     private int pathValuesSum;
-    int x, y;
+    private int x, y;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void incrementX() {
+        x++;
+    }
+
+    public void incrementY() {
+        y++;
+    }
 
     public Node() {
         pathValues = new ArrayList<>();

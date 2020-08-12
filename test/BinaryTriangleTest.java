@@ -1,17 +1,4 @@
-//import exception.InputDataException;
-//import exception.PositiveNumberException;
-//import org.junit.jupiter.api.Test;
-//
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,11 +39,7 @@ public class BinaryTriangleTest {
     @Test
     public void wrongData() {
         List<String> wrongData = List.of("1", "a 2");
-        NumberFormatException exception = assertThrows(NumberFormatException.class,
-                () -> BinaryTriangle.mapListTo2DArray(wrongData),
-                "Check data.");
-        System.out.println(exception.getMessage()
-                                    .contains("For input string: "));
+        assertThrows(NumberFormatException.class, () -> BinaryTriangle.mapListTo2DArray(wrongData));
     }
 //
 //    @Test

@@ -2,10 +2,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
  * The main idea is to imagine this triangle as coordinate plane;
@@ -27,8 +27,7 @@ public class BinaryTriangle {
         try {
             List<String> rowsList = readDataFromFile(INPUT_FILE_NAME);
             int[][] triangle = mapListTo2DArray(rowsList);
-            Node root = new Node();
-            computePathSum(triangle, root);
+            computePathSum(triangle, new Node());
             printPathAndValue();
         } catch (IOException exception) {
             System.out.println(INPUT_FILE_FAILURE);
@@ -38,15 +37,17 @@ public class BinaryTriangle {
     }
 
     public static void computePathSum(final int[][] triangle, Node node) throws CloneNotSupportedException {
-        int parentNode = triangle.length > 0 ? triangle[node.x][node.y] : 0;
-        node.addNodeValue(parentNode);
-        if (node.x + 1 < triangle.length) {
-            ++node.x;
-            int leftChildNode = triangle[node.x][node.y];
+        Node currentNode = node.clone();
+        int parentNode = triangle.length > 0 ? triangle[currentNode.getX()][currentNode.getY()] : 0;
+        currentNode.addNodeValue(parentNode);
+        if (currentNode.getX() + 1 < triangle.length) {
+            currentNode.incrementX();
+            int leftChildNode = triangle[currentNode.getX()][currentNode.getY()];
             if ((areEvenOddBetweenSelf(parentNode, leftChildNode))) {
-                computePathSum(triangle, node.clone());
+                computePathSum(triangle, currentNode.clone());
             }
-            int rightChildNode = triangle[node.x][++node.y];
+            currentNode.incrementY();
+            int rightChildNode = triangle[node.getX()][node.getY()];
             if (areEvenOddBetweenSelf(parentNode, rightChildNode)) {
                 computePathSum(triangle, node.clone());
             }
@@ -55,8 +56,8 @@ public class BinaryTriangle {
         }
     }
 
-    private static int[] mapStringNumbersRowToIntArray(String row) throws NumberFormatException {
-        return Arrays.stream(row.split(" "))
+    private static int[] mapStringNumbersRowToIntArray(String numbersRow) throws NumberFormatException {
+        return Stream.of(numbersRow.split(" "))
                      .mapToInt(Integer::parseInt)
                      .toArray();
     }
@@ -84,11 +85,11 @@ public class BinaryTriangle {
         return areEvenOdd(a, b) || areEvenOdd(b, a);
     }
 
-    private static boolean areEvenOdd(int a, int b) {
+    protected static boolean areEvenOdd(int a, int b) {
         return isEven(a) && !isEven(b);
     }
 
-    private static boolean isEven(final int number) {
+    protected static boolean isEven(final int number) {
         return number % 2 == 0;
     }
 }
